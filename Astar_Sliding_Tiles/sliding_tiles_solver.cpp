@@ -1,4 +1,3 @@
-// Example program
 #include <iostream>
 #include <vector>
 #include <array>
@@ -226,42 +225,6 @@ vector<array<int,9>> explore(array<int,9> state){
 
 int main()
 {
-    /*
-    cout << "h1 for initial state gives: " << h1(initialState) << "\n";
-    cout << "h1 for goal state gives: " << h1(goalState) << "\n";
-    cout << "g1 for initial state gives: " << g1(initialState) << "\n";
-    cout << "g1 for goal state gives: " << g1(goalState) << "\n";
-    cout << "\n";
-    cout << "h2 for initial state gives: " << h2(initialState) << "\n";
-    cout << "h2 for random state gives: " << h2(randomState) << "\n";
-    cout << "h2 for goal state gives: " << h2(goalState) << "\n";
-    cout << "g2 for initial state gives: " << g2(initialState) << "\n";
-    cout << "g2 for random state gives: " << g2(randomState) << "\n";
-    cout << "g2 for goal state gives: " << g2(goalState) << "\n";
-    cout << "\n";
-    */
-    
-    /*
-    //int fringe[maxSize][9];
-    
-    setState(fringe, 0, initialState);
-    setState(fringe, 1, randomState);
-    setState(fringe, 2, goalState);
-    
-    int greedy1Result = selectFrom(fringe,greedy1,3);
-    cout << "greedy1 node is " << greedy1Result << "\n";
-    cout << "\n";
-    int aStar1Result = selectFrom(fringe,aStar1,3);
-    cout << "A*1 node is " << aStar1Result << "\n";
-    cout << "\n";
-    int greedy2Result = selectFrom(fringe,greedy2,3);
-    cout << "greedy2 node is " << greedy2Result << "\n";
-    cout << "\n";
-    int aStar2Result = selectFrom(fringe,aStar2,3);
-    cout << "A*2 node is " << aStar2Result << "\n";
-    cout << "\n";
-    */
-    
     cout << "The goal state is:" << "\n";
     printState(goalState);
     cout << "The initial state is:" << "\n";
@@ -269,36 +232,27 @@ int main()
     
     vector<array<int,9>> fringe;
     fringe.push_back(initialState);
-    int emptyTile = findEmptyTile(initialState);
-    cout << "Row: " << findRow(0,initialState) << "\tCol: " << findCol(0,initialState) << "\n";
     cout << "\n";
     
-    vector<array<int,9>> currFringe = explore(initialState);
-    cout<<"Printing available future states: \n\n";
-    for (int i=0;i<currFringe.size();i++){
-        printState(currFringe[i]);
-        cout<<"\n";
-    }
-    //int bestGreedyNode = selectFrom(currFringe, greedy2, currFringe.size());
-    int bestAStarNode = selectFrom(currFringe, aStar2, currFringe.size());
+    int bestAStarNode = selectFrom(fringe, aStar2, fringe.size());
     int iteration = 1;
-    
-    while(aStar2(currFringe[bestAStarNode]) != 0 && iteration < maxIterations){
-        cout << "Starting again from option " << bestAStarNode << ":\n";
-        cout << "Cost of option is " << aStar2(currFringe[bestAStarNode]) << "\n";
-        printState(currFringe[bestAStarNode]);
-        currFringe = explore(currFringe[bestAStarNode]);
+    while(aStar2(fringe[bestAStarNode]) != 0 && iteration < maxIterations){
+        cout << "Current state:\n";
+        printState(fringe[bestAStarNode]);
+        cout << "Cost of option is " << aStar2(fringe[bestAStarNode]) << "\n";
+        fringe = explore(fringe[bestAStarNode]);
         cout<<"Printing available future states: \n\n";
-        for (int i=0;i<currFringe.size();i++){
-            printState(currFringe[i]);
+        for (int i=0;i<fringe.size();i++){
+            printState(fringe[i]);
             cout<<"\n";
         }
-        bestAStarNode = selectFrom(currFringe, aStar2, currFringe.size());
+        bestAStarNode = selectFrom(fringe, aStar2, fringe.size());
+        cout << "\nChose option " << bestAStarNode << "\n";
         iteration++;
     }
+    cout << "\n";
     if(iteration==maxIterations) cout<<maxIterations<<" iterations have occured, giving up\n";
     else cout<<"Succeeded in finding goal!\n";
- 
 }
 
 void printState(array<int,9> state){
@@ -358,7 +312,6 @@ int g1(array<int,9> state){
 
 int h2(array<int,9> state){
 	int blockDistance = 0;
-	//cout << "h2 = ";
 	for(int i=0;i<9;i++){
 	    if (state[i] != 0){
     	    int tileVal = state[i];
@@ -369,13 +322,8 @@ int h2(array<int,9> state){
     		int rowDist = abs(tileRow-goalRow);
     		int colDist = abs(tileCol-goalCol);
     		blockDistance +=  rowDist + colDist;
-    		//cout << rowDist+colDist;
-    		//if(i<8) cout << "+";
-    		//cout << "pos " << i << " has val " << tileVal << "\n";
-    		//cout << "pos " << i << " has rowdist " << rowDist << " and coldist " << colDist << "\n";
 	    }
 	}
-	//cout << " = " << blockDistance << "\n";
 	return blockDistance;
 }
 int g2(array<int,9> state){
@@ -390,4 +338,3 @@ int g2(array<int,9> state){
 	}
 	return blockDistance;
 }
-
