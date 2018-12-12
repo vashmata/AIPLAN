@@ -69,13 +69,12 @@ int selectFrom(vector<array<int,9>> fringe, int (*strategy)(array<int,9> state),
 	return bestNode;
 }
 
-vector<array<int,9>> explore(array<int,9> state){
+vector<array<int,9>> explore(array<int,9> state, vector<array<int,9>> fringe, int fringePos){
     int emptyTile = findEmptyTile(state);
     int tileRow = findRow(0,state);
     int tileCol = findCol(0,state);
     int possibleStates;
     
-    vector<array<int,9>> fringe;
     array<int,9> state1, state2, state3, state4;
     switch(emptyTile){
         case 0:
@@ -116,8 +115,6 @@ vector<array<int,9>> explore(array<int,9> state){
                     state2[i]=state[i];
                 }
             }
-            fringe.push_back(state1);
-            fringe.push_back(state2);
             break;
         case 1:
         case 3:
@@ -166,9 +163,6 @@ vector<array<int,9>> explore(array<int,9> state){
                     state3[i]=state[i];
                 }
             }
-            fringe.push_back(state1);
-            fringe.push_back(state2);
-            fringe.push_back(state3);
             break;
         case 4:
             possibleStates = 4;
@@ -210,15 +204,19 @@ vector<array<int,9>> explore(array<int,9> state){
                     state4[i]=state[i];
                 }
             }
-            fringe.push_back(state1);
-            fringe.push_back(state2);
-            fringe.push_back(state3);
-            fringe.push_back(state4);
             break;
         default:
             possibleStates = 0;
             break;
     }
+    
+    fringe.erase(fringe.begin()+fringePos);
+    if(possibleStates>=2){
+        fringe.push_back(state1);
+        fringe.push_back(state2);
+    }
+    if(possibleStates>=3) fringe.push_back(state3);
+    if(possibleStates>=4) fringe.push_back(state4);
 
     return fringe;
 }
@@ -240,7 +238,7 @@ int main()
         cout << "Current state:\n";
         printState(fringe[bestAStarNode]);
         cout << "Cost of option is " << aStar2(fringe[bestAStarNode]) << "\n";
-        fringe = explore(fringe[bestAStarNode]);
+        fringe = explore(fringe[bestAStarNode],fringe,bestAStarNode);
         cout<<"Printing available future states: \n\n";
         for (int i=0;i<fringe.size();i++){
             printState(fringe[i]);
