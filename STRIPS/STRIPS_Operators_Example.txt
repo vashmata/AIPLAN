@@ -1,0 +1,36 @@
+;; moves a robot between two adjacent locations
+(:action move
+	:parameters (?r - robot ?from ?to - location)
+	:precondition (and
+		(adjacent ?from ?to)(at ?r ?from)
+		(not(occupied ?to))
+	)
+	:effect (and
+		(at ?r ?to)(occupied ?to)
+		(not(occupied ?from))(not (at ?r ?from))
+	)
+)
+		
+;; loads container from crane onto robot in a location
+(:action load
+	:parameters (?k - crane ?l - location ?c - container ?r - robot)
+	:precondition (and
+		(belong ?k ?l)(holding ?k ?c)(at ?r ?l)(unloaded ?r)
+	}
+	:effect (and
+		(empty ?k)(loaded ?r ?c)
+		(not(holding ?k ?c))(not(unloaded ?r))
+	)
+)
+
+;; puts container held by crane onto a pile
+(:action put
+	:parameters (?k - crane ?l - location ?newtop ?oldtop - container ?p - pile)
+	:precondition (and
+		(belong ?k ?l)(attached ?p ?l)(holding ?k ?newtop)(top ?oldtop)
+	)
+	:effect (and
+		(empty ?k)(in ?newtop ?p)(top ?newtop ?p)(on ?newtop ?oldtop)
+		(not(top ?oldtop ?p))
+	)
+)
