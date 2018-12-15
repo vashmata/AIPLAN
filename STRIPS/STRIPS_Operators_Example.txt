@@ -27,10 +27,14 @@
 (:action put
 	:parameters (?k - crane ?l - location ?newtop ?oldtop - container ?p - pile)
 	:precondition (and
-		(belong ?k ?l)(attached ?p ?l)(holding ?k ?newtop)(top ?oldtop)
+		;(belong ?k ?l)(attached ?p ?l)(holding ?k ?newtop)(top ?oldtop)
+		; top needs to specify the container AND the pile too!
+		(belong ?k ?l)(attached ?p ?l)(holding ?k ?newtop)(top ?oldtop ?p)
 	)
 	:effect (and
 		(empty ?k)(in ?newtop ?p)(top ?newtop ?p)(on ?newtop ?oldtop)
-		(not(top ?oldtop ?p))
+		;(not(top ?oldtop ?p))
+		; remove the holding state too!
+		(not(top ?oldtop ?p)) (not(holding ?k ?newtop))
 	)
 )
